@@ -44,9 +44,18 @@ return [
 A Symfony YAML-file definition:
 ```yaml
 services:
-    Papyrus\DomainEventRegistry\DomainEventRegistry:
-        class: Papyrus\DomainEventRegistry\InMemory\InMemoryDomainEventRegistry
-        arguments:
-            - Name\Space\SomeDomainEvent
-            - Name\Space\AnotherDomainEvent
+  _defaults:
+    autowire: true
+    autoconfigure: true
+
+  # Other definitions
+  # ...
+  
+  Papyrus\DomainEventRegistry\DomainEventRegistry:
+    class: Papyrus\DomainEventRegistry\InMemory\InMemoryDomainEventRegistry
+      arguments:
+        # Ideally, create a class loader (with caching) to use as input for the registry
+        $eventClassNames:
+          - Name\Space\SomeDomainEvent
+          - Name\Space\AnotherDomainEvent
 ```
