@@ -1,4 +1,11 @@
 # 📜 Papyrus Domain event registry
+[![Build Status](https://scrutinizer-ci.com/g/papyrusphp/domain-event-registry/badges/build.png?b=main)](https://github.com/papyrusphp/domain-event-registry/actions)
+[![Coverage Status](https://img.shields.io/scrutinizer/coverage/g/papyrusphp/domain-event-registry.svg?style=flat)](https://scrutinizer-ci.com/g/papyrusphp/domain-event-registry/code-structure)
+[![Quality Score](https://img.shields.io/scrutinizer/g/papyrusphp/domain-event-registry.svg?style=flat)](https://scrutinizer-ci.com/g/papyrusphp/domain-event-registry)
+[![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat)](LICENSE)
+[![Packagist Version](https://img.shields.io/packagist/v/papyrus/domain-event-registry.svg?style=flat&include_prereleases)](https://packagist.org/packages/papyrus/domain-event-registry)
+[![PHP Version](https://img.shields.io/badge/php-%5E8.1-8892BF.svg?style=flat)](http://www.php.net)
+
 Domain event registry for [papyrus/event-sourcing](https://github.com/papyrusphp/event-sourcing).
 
 This package contains both an interface (the contract) as well as a simple 'in memory' implementation for a Domain event registry.  
