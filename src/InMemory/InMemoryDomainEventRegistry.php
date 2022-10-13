@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Papyrus\DomainEventRegistry\InMemory;
 
+use Papyrus\DomainEventRegistry\DomainEventNameResolver\DomainEventNameResolver;
 use Papyrus\DomainEventRegistry\DomainEventNotRegisteredException;
 use Papyrus\DomainEventRegistry\DomainEventRegistry;
 use Papyrus\EventSourcing\DomainEvent;
@@ -18,11 +19,13 @@ final class InMemoryDomainEventRegistry implements DomainEventRegistry
     /**
      * @param list<class-string<DomainEvent>> $eventClassNames
      */
-    public function __construct(array $eventClassNames)
-    {
+    public function __construct(
+        private readonly DomainEventNameResolver $domainEventNameResolver,
+        array $eventClassNames,
+    ) {
         foreach ($eventClassNames as $eventClassName) {
             if (is_subclass_of($eventClassName, DomainEvent::class)) {
-                $this->registeredEvents[$eventClassName::getEventName()] = $eventClassName;
+                $this->registeredEvents[$this->domainEventNameResolver->resolve($eventClassName)] = $eventClassName;
             }
         }
     }
