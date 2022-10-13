@@ -12,6 +12,9 @@ This package contains both an interface (the contract) as well as a simple 'in m
 
 Usable in [papyrus/event-store](https://github.com/papyrusphp/event-store).
 
+Available implementations:
+- [papyrus/class-reflection-domain-event-registry](https://github.com/papyrusphp/class-reflection-domain-event-registry) - using class reflection
+
 ## Installation
 Install via composer:
 ```bash
