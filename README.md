@@ -24,6 +24,11 @@ Bind your own implementation or the included `InMemoryDomainEventRegistry` to th
 A plain PHP PSR-11 Container definition:
 
 ```php
+use Doctrine\Inflector\Inflector;
+use Papyrus\DomainEventRegistry\DomainEventNameResolver\ClassBased\ClassBasedDomainEventNameResolver;
+use Papyrus\DomainEventRegistry\DomainEventNameResolver\ClassBased\ClassBasedDomainEventNameResolverDecorator;
+use Papyrus\DomainEventRegistry\DomainEventNameResolver\DomainEventNameResolver;
+use Papyrus\DomainEventRegistry\DomainEventNameResolver\NamedDomainEvent\NamedDomainEventNameResolver;
 use Papyrus\DomainEventRegistry\DomainEventRegistry;
 use Papyrus\DomainEventRegistry\InMemory\InMemoryDomainEventRegistry;
 use Psr\Container\ContainerInterface;
@@ -35,10 +40,21 @@ return [
     DomainEventRegistry::class => static function (ContainerInterface $container): DomainEventRegistry {
         // Ideally, create a class loader (with caching) to use as input for the registry
         return new InMemoryDomainEventRegistry(
-            SomeDomainEvent::class,
-            AnotherDomainEvent::class,
+            $container->get(DomainEventNameResolver::class),
+            [
+                SomeDomainEvent::class,
+                AnotherDomainEvent::class,
+            ],
         );
     },
+    
+    DomainEventNameResolver::class => static function (ContainerInterface $container): DomainEventNameResolver {
+        // Only use the decorator if you would like to use BOTH the Class-based- as Named- DomainEventNameResolver
+        return new ClassBasedDomainEventNameResolverDecorator(
+            new ClassBasedDomainEventNameResolver($container->get(Inflector::class)),
+            new NamedDomainEventNameResolver()
+        );    
+    }, 
 ];
 ```
 A Symfony YAML-file definition:
@@ -53,9 +69,18 @@ services:
   
   Papyrus\DomainEventRegistry\DomainEventRegistry:
     class: Papyrus\DomainEventRegistry\InMemory\InMemoryDomainEventRegistry
-      arguments:
-        # Ideally, create a class loader (with caching) to use as input for the registry
-        $eventClassNames:
-          - Name\Space\SomeDomainEvent
-          - Name\Space\AnotherDomainEvent
+    arguments:
+      # Ideally, create a class loader (with caching) to use as input for the registry
+      $eventClassNames:
+        - Name\Space\SomeDomainEvent
+        - Name\Space\AnotherDomainEvent
+
+  Papyrus\DomainEventRegistry\DomainEventNameResolver\DomainEventNameResolver:
+    class: Papyrus\DomainEventRegistry\DomainEventNameResolver\NamedDomainEvent\NamedDomainEventNameResolver
+
+  # Only use the decorator if you would like to use BOTH the Class-based- as Named- DomainEventNameResolver
+  ClassBasedDomainEventNameResolverDecorator:
+    decorates: Papyrus\DomainEventRegistry\DomainEventNameResolver\DomainEventNameResolver
+
+  Papyrus\DomainEventRegistry\DomainEventNameResolver\ClassBased\ClassBasedDomainEventNameResolver: ~
 ```
