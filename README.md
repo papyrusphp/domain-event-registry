@@ -82,7 +82,7 @@ services:
     class: Papyrus\DomainEventRegistry\DomainEventNameResolver\NamedDomainEvent\NamedDomainEventNameResolver
 
   # Only use the decorator if you would like to use BOTH the Class-based- as Named- DomainEventNameResolver
-  ClassBasedDomainEventNameResolverDecorator:
+  Papyrus\DomainEventRegistry\DomainEventNameResolver\ClassBased\ClassBasedDomainEventNameResolverDecorator:
     decorates: Papyrus\DomainEventRegistry\DomainEventNameResolver\DomainEventNameResolver
 
   Papyrus\DomainEventRegistry\DomainEventNameResolver\ClassBased\ClassBasedDomainEventNameResolver: ~
