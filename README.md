@@ -51,12 +51,12 @@ return [
         );
     },
     
+    // Optionally ClassBasedDomainEventNameResolver can be used as a fallback resolver via ClassBasedDomainEventNameResolverDecorator
     DomainEventNameResolver::class => static function (ContainerInterface $container): DomainEventNameResolver {
-        // Only use the decorator if you would like to use BOTH the Class-based- as Named- DomainEventNameResolver
         return new ClassBasedDomainEventNameResolverDecorator(
             new ClassBasedDomainEventNameResolver($container->get(Inflector::class)),
-            new NamedDomainEventNameResolver()
-        );    
+            new YourImplementationOfDomainEventNameResolver()
+        );
     }, 
 ];
 ```
@@ -79,9 +79,12 @@ services:
         - Name\Space\AnotherDomainEvent
 
   Papyrus\DomainEventRegistry\DomainEventNameResolver\DomainEventNameResolver:
-    class: Papyrus\DomainEventRegistry\DomainEventNameResolver\NamedDomainEvent\NamedDomainEventNameResolver
+    class: Papyrus\DomainEventRegistry\DomainEventNameResolver\ClassBased\ClassBasedDomainEventNameResolver
 
-  # Only use the decorator if you would like to use BOTH the Class-based- as Named- DomainEventNameResolver
+  # Optionally ClassBasedDomainEventNameResolver can be used as a fallback resolver via ClassBasedDomainEventNameResolverDecorator
+  Papyrus\DomainEventRegistry\DomainEventNameResolver\DomainEventNameResolver:
+    class: Your\Implemenation\Of\DomainEventNameResolver
+    
   Papyrus\DomainEventRegistry\DomainEventNameResolver\ClassBased\ClassBasedDomainEventNameResolverDecorator:
     decorates: Papyrus\DomainEventRegistry\DomainEventNameResolver\DomainEventNameResolver
 
