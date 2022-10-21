@@ -6,8 +6,12 @@ namespace Papyrus\DomainEventRegistry\DomainEventNameResolver\ClassBased;
 
 use Doctrine\Inflector\Inflector;
 use Papyrus\DomainEventRegistry\DomainEventNameResolver\DomainEventNameResolver;
-use Papyrus\EventSourcing\DomainEvent;
 
+/**
+ * @template DomainEvent of object
+ *
+ * @implements DomainEventNameResolver<DomainEvent>
+ */
 final class ClassBasedDomainEventNameResolver implements DomainEventNameResolver
 {
     public function __construct(
@@ -15,9 +19,9 @@ final class ClassBasedDomainEventNameResolver implements DomainEventNameResolver
     ) {
     }
 
-    public function resolve(string|DomainEvent $event): string
+    public function resolve(string|object $event): string
     {
-        if ($event instanceof DomainEvent) {
+        if (is_object($event)) {
             $event = $event::class;
         }
 

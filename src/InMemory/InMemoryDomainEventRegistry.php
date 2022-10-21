@@ -7,8 +7,12 @@ namespace Papyrus\DomainEventRegistry\InMemory;
 use Papyrus\DomainEventRegistry\DomainEventNameResolver\DomainEventNameResolver;
 use Papyrus\DomainEventRegistry\DomainEventNotRegisteredException;
 use Papyrus\DomainEventRegistry\DomainEventRegistry;
-use Papyrus\EventSourcing\DomainEvent;
 
+/**
+ * @template DomainEvent of object
+ *
+ * @implements DomainEventRegistry<DomainEvent>
+ */
 final class InMemoryDomainEventRegistry implements DomainEventRegistry
 {
     /**
@@ -17,6 +21,7 @@ final class InMemoryDomainEventRegistry implements DomainEventRegistry
     private array $registeredEvents = [];
 
     /**
+     * @param DomainEventNameResolver<DomainEvent> $domainEventNameResolver
      * @param list<class-string<DomainEvent>> $eventClassNames
      */
     public function __construct(
@@ -24,9 +29,7 @@ final class InMemoryDomainEventRegistry implements DomainEventRegistry
         array $eventClassNames,
     ) {
         foreach ($eventClassNames as $eventClassName) {
-            if (is_subclass_of($eventClassName, DomainEvent::class)) {
-                $this->registeredEvents[$this->domainEventNameResolver->resolve($eventClassName)] = $eventClassName;
-            }
+            $this->registeredEvents[$this->domainEventNameResolver->resolve($eventClassName)] = $eventClassName;
         }
     }
 

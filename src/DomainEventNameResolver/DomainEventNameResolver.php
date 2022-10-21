@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace Papyrus\DomainEventRegistry\DomainEventNameResolver;
 
-use Papyrus\EventSourcing\DomainEvent;
-
+/**
+ * @template DomainEvent of object
+ */
 interface DomainEventNameResolver
 {
     /**
@@ -13,5 +14,5 @@ interface DomainEventNameResolver
      *
      * @throws UnresolvableDomainEventException
      */
-    public function resolve(string|DomainEvent $event): string;
+    public function resolve(string|object $event): string;
 }

@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace Papyrus\DomainEventRegistry\Test\InMemory;
 
-use Papyrus\DomainEventRegistry\DomainEventNameResolver\NamedDomainEvent\NamedDomainEventNameResolver;
+use Doctrine\Inflector\InflectorFactory;
+use Papyrus\DomainEventRegistry\DomainEventNameResolver\ClassBased\ClassBasedDomainEventNameResolver;
 use Papyrus\DomainEventRegistry\DomainEventNotRegisteredException;
 use Papyrus\DomainEventRegistry\InMemory\InMemoryDomainEventRegistry;
 use Papyrus\DomainEventRegistry\Test\InMemory\Stub\TestDomainEvent;
@@ -15,19 +16,33 @@ use PHPUnit\Framework\TestCase;
  */
 class InMemoryDomainEventRegistryTest extends TestCase
 {
-    /**
-     * @test
-     */
-    public function itShouldRetrieveRegisteredDomainEvent(): void
+    /** @var InMemoryDomainEventRegistry<TestDomainEvent> */
+    private InMemoryDomainEventRegistry $registry;
+
+    protected function setUp(): void
     {
-        $registry = new InMemoryDomainEventRegistry(
-            new NamedDomainEventNameResolver(),
+        /** @var ClassBasedDomainEventNameResolver<TestDomainEvent> $domainEventResolver */
+        $domainEventResolver = new ClassBasedDomainEventNameResolver(InflectorFactory::create()->build());
+
+        $this->registry = new InMemoryDomainEventRegistry(
+            $domainEventResolver,
             [
                 TestDomainEvent::class,
             ],
         );
 
-        self::assertSame(TestDomainEvent::class, $registry->retrieve('test.domain-event'));
+        parent::setUp();
+    }
+
+    /**
+     * @test
+     */
+    public function itShouldRetrieveRegisteredDomainEvent(): void
+    {
+        self::assertSame(
+            TestDomainEvent::class,
+            $this->registry->retrieve('papyrus.domain-event-registry.test.in-memory.stub.test-domain-event'),
+        );
     }
 
     /**
@@ -35,15 +50,8 @@ class InMemoryDomainEventRegistryTest extends TestCase
      */
     public function itShouldThrowExceptionWhenDomainEventIsNotRegistered(): void
     {
-        $registry = new InMemoryDomainEventRegistry(
-            new NamedDomainEventNameResolver(),
-            [
-                TestDomainEvent::class,
-            ],
-        );
-
         self::expectException(DomainEventNotRegisteredException::class);
 
-        $registry->retrieve('unknown.test.domain-event');
+        $this->registry->retrieve('unknown.test.domain-event');
     }
 }
