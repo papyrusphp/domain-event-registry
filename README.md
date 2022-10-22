@@ -51,6 +51,10 @@ return [
         );
     },
     
+    DomainEventNameResolver::class => static function (ContainerInterface $container): DomainEventNameResolver {
+        return new ClassBasedDomainEventNameResolver($container->get(Inflector::class));
+    }, 
+
     // Optionally ClassBasedDomainEventNameResolver can be used as a fallback resolver via ClassBasedDomainEventNameResolverDecorator
     DomainEventNameResolver::class => static function (ContainerInterface $container): DomainEventNameResolver {
         return new ClassBasedDomainEventNameResolverDecorator(
