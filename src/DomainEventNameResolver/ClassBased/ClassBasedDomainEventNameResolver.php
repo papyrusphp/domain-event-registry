@@ -19,12 +19,8 @@ final class ClassBasedDomainEventNameResolver implements DomainEventNameResolver
     ) {
     }
 
-    public function resolve(string|object $event): string
+    public function resolve(string $event): string
     {
-        if (is_object($event)) {
-            $event = $event::class;
-        }
-
         return str_replace(['\\', '_'], ['.', '-'], $this->inflector->tableize($event));
     }
 }

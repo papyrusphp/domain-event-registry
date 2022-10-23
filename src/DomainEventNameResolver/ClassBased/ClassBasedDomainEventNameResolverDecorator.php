@@ -24,7 +24,7 @@ final class ClassBasedDomainEventNameResolverDecorator implements DomainEventNam
     ) {
     }
 
-    public function resolve(string|object $event): string
+    public function resolve(string $event): string
     {
         try {
             return $this->domainEventNameResolver->resolve($event);

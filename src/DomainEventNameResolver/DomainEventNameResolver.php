@@ -10,9 +10,9 @@ namespace Papyrus\DomainEventRegistry\DomainEventNameResolver;
 interface DomainEventNameResolver
 {
     /**
-     * @param class-string<DomainEvent>|DomainEvent $event
+     * @param class-string<DomainEvent> $event
      *
      * @throws UnresolvableDomainEventException
      */
-    public function resolve(string|object $event): string;
+    public function resolve(string $event): string;
 }

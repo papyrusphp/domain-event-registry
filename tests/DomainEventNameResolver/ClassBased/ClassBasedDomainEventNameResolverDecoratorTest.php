@@ -13,7 +13,6 @@ use Papyrus\DomainEventRegistry\DomainEventNameResolver\ClassBased\ClassBasedDom
 use Papyrus\DomainEventRegistry\DomainEventNameResolver\DomainEventNameResolver;
 use Papyrus\DomainEventRegistry\DomainEventNameResolver\UnresolvableDomainEventException;
 use Papyrus\DomainEventRegistry\Test\InMemory\Stub\TestDomainEvent;
-use stdClass;
 
 /**
  * @internal
@@ -47,7 +46,7 @@ class ClassBasedDomainEventNameResolverDecoratorTest extends MockeryTestCase
     {
         $this->resolver->expects('resolve')->andReturn('test.domain-event');
 
-        $eventName = $this->decorator->resolve(new stdClass());
+        $eventName = $this->decorator->resolve(TestDomainEvent::class);
 
         self::assertSame('test.domain-event', $eventName);
     }
@@ -61,7 +60,7 @@ class ClassBasedDomainEventNameResolverDecoratorTest extends MockeryTestCase
             ->andThrow(UnresolvableDomainEventException::withEvent(new TestDomainEvent()))
         ;
 
-        $eventName = $this->decorator->resolve(new TestDomainEvent());
+        $eventName = $this->decorator->resolve(TestDomainEvent::class);
 
         self::assertSame(
             'papyrus.domain-event-registry.test.in-memory.stub.test-domain-event',

@@ -17,20 +17,7 @@ class ClassBasedDomainEventNameResolverTest extends TestCase
     /**
      * @test
      */
-    public function itShouldResolveNameFromEvent(): void
-    {
-        $resolver = new ClassBasedDomainEventNameResolver(InflectorFactory::create()->build());
-
-        self::assertSame(
-            'papyrus.domain-event-registry.test.in-memory.stub.test-domain-event',
-            $resolver->resolve(new TestDomainEvent()),
-        );
-    }
-
-    /**
-     * @test
-     */
-    public function itShouldResolveNameFromEventFqcn(): void
+    public function itShouldResolveName(): void
     {
         $resolver = new ClassBasedDomainEventNameResolver(InflectorFactory::create()->build());
 
